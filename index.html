@@ -481,6 +481,11 @@
     animation: pulse 2s infinite;
   }
 
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
   @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 0.3; }
     50% { transform: scale(1.1); opacity: 0; }
@@ -681,6 +686,9 @@
 </footer>
 
 <script>
+  // === Config ===
+  const WEBHOOK_URL = 'COLE_A_URL_DO_APPS_SCRIPT_AQUI';
+
   // === State ===
   const formData = {
     interesse: null,
@@ -774,15 +782,24 @@
       return;
     }
 
-    // Submit (placeholder — substituir por POST real)
-    console.log('Form data:', formData);
+    // Loading state
+    btnEnviar.disabled = true;
+    btnEnviar.innerHTML = 'Enviando... <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
 
-    // Show success
-    step2.classList.remove('active');
-    stepSuccess.classList.add('active');
-    prog2.classList.remove('active');
-    prog2.classList.add('completed');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const showSuccess = () => {
+      step2.classList.remove('active');
+      stepSuccess.classList.add('active');
+      prog2.classList.remove('active');
+      prog2.classList.add('completed');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      body: JSON.stringify(formData)
+    })
+    .then(() => showSuccess())
+    .catch(() => showSuccess());
   });
 
   // Clear error border on input
