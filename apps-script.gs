@@ -21,14 +21,18 @@ function doPost(e) {
       G: 'Outro Tema'
     };
 
-    sheet.appendRow([
+    // Força coluna WhatsApp (E) como texto para não interpretar o "+" como fórmula
+    sheet.getRange('E:E').setNumberFormat('@');
+
+    const newRow = sheet.getLastRow() + 1;
+    sheet.getRange(newRow, 1, 1, 6).setValues([[
       new Date().toLocaleString('pt-BR', { timeZone: 'America/New_York' }),
       interesse[data.interesse] || data.interesse,
       data.nome,
       data.email,
       data.whatsapp,
       data.origem
-    ]);
+    ]]);
 
     return ContentService
       .createTextOutput(JSON.stringify({ success: true }))
