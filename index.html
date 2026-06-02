@@ -128,6 +128,117 @@
     text-transform: uppercase;
   }
 
+  /* ============ LANGUAGE SCREEN ============ */
+  .lang-screen {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-7) var(--sp-4) var(--sp-8);
+    text-align: center;
+    animation: stepIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lang-screen.hidden { display: none; }
+
+  .lang-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold-500);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: var(--sp-4);
+  }
+
+  .lang-title {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--sp-3);
+    color: var(--text-primary);
+    max-width: 520px;
+  }
+
+  .lang-title em {
+    font-style: italic;
+    color: var(--gold-500);
+    display: block;
+    font-size: 0.7em;
+    margin-top: var(--sp-2);
+    color: var(--text-secondary);
+  }
+
+  .lang-options {
+    display: flex;
+    gap: var(--sp-4);
+    margin-top: var(--sp-7);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .lang-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-3);
+    width: 180px;
+    padding: var(--sp-6) var(--sp-5);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--depth-shadow);
+  }
+
+  .lang-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gold-gradient);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .lang-btn:hover {
+    border-color: var(--gold-500);
+    background: var(--gold-gradient-soft);
+    transform: translateY(-4px);
+    box-shadow: var(--depth-shadow), var(--gold-glow);
+  }
+
+  .lang-btn:hover::before { opacity: 1; }
+
+  .lang-flag {
+    font-size: 40px;
+    line-height: 1;
+  }
+
+  .lang-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .lang-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
   /* ============ MAIN ============ */
   main {
     flex: 1;
@@ -533,6 +644,9 @@
     .option-letter { width: 28px; height: 28px; font-size: 12px; }
     .option-text { font-size: 14px; }
     .btn-primary { width: 100%; }
+    .lang-title { font-size: 30px; }
+    .lang-options { width: 100%; gap: var(--sp-3); }
+    .lang-btn { flex: 1; min-width: 140px; width: auto; padding: var(--sp-5) var(--sp-4); }
   }
 </style>
 </head>
@@ -540,10 +654,33 @@
 
 <header>
   <div class="brand">Up <em>Finance</em></div>
-  <div class="brand-tagline">Building Wealth · Elevating Life</div>
+  <div class="brand-tagline" data-i18n="tagline">Building Wealth · Elevating Life</div>
 </header>
 
-<main>
+<!-- LANGUAGE SCREEN -->
+<section class="lang-screen" id="lang-screen">
+  <div class="lang-eyebrow">Up Finance</div>
+  <h1 class="lang-title">
+    Escolha seu idioma
+    <em>Choose your language</em>
+  </h1>
+
+  <div class="lang-options">
+    <button class="lang-btn" data-lang="pt">
+      <span class="lang-flag">🇧🇷</span>
+      <span class="lang-name">Português</span>
+      <span class="lang-sub">Brasil</span>
+    </button>
+
+    <button class="lang-btn" data-lang="en">
+      <span class="lang-flag">🇺🇸</span>
+      <span class="lang-name">English</span>
+      <span class="lang-sub">United States</span>
+    </button>
+  </div>
+</section>
+
+<main id="form-wrap" hidden>
   <div class="progress">
     <div class="progress-step active" id="prog-1"></div>
     <div class="progress-step" id="prog-2"></div>
@@ -552,11 +689,11 @@
   <div class="card">
     <!-- STEP 1 -->
     <div class="step active" id="step-1" data-step="1">
-      <h1 class="step-title">Responda para ganhar</h1>
+      <h1 class="step-title" data-i18n="step1Title">Responda para ganhar</h1>
 
       <div class="question">
         <label class="question-label">
-          Você está interessado em:
+          <span data-i18n="q1Label">Você está interessado em:</span>
           <span class="required">*</span>
         </label>
 
@@ -564,49 +701,49 @@
           <label class="option">
             <input type="radio" name="interesse" value="A" required>
             <span class="option-letter">A</span>
-            <span class="option-text">Participar de um seminário gratuito sobre finanças</span>
+            <span class="option-text" data-i18n="optA">Participar de um seminário gratuito sobre finanças</span>
           </label>
 
           <label class="option">
             <input type="radio" name="interesse" value="B" required>
             <span class="option-letter">B</span>
-            <span class="option-text">Saber mais sobre como ter uma aposentadoria livre de impostos</span>
+            <span class="option-text" data-i18n="optB">Saber mais sobre como ter uma aposentadoria livre de impostos</span>
           </label>
 
           <label class="option">
             <input type="radio" name="interesse" value="C" required>
             <span class="option-letter">C</span>
-            <span class="option-text">Como posso planejar os custos de faculdade para os meus filhos</span>
+            <span class="option-text" data-i18n="optC">Como posso planejar os custos de faculdade para os meus filhos</span>
           </label>
 
           <label class="option">
             <input type="radio" name="interesse" value="D" required>
             <span class="option-letter">D</span>
-            <span class="option-text">Saber mais sobre proteção hipotecária</span>
+            <span class="option-text" data-i18n="optD">Saber mais sobre proteção hipotecária</span>
           </label>
 
           <label class="option">
             <input type="radio" name="interesse" value="E" required>
             <span class="option-letter">E</span>
-            <span class="option-text">Saber mais sobre os Benefícios em Vida</span>
+            <span class="option-text" data-i18n="optE">Saber mais sobre os Benefícios em Vida</span>
           </label>
 
           <label class="option">
             <input type="radio" name="interesse" value="F" required>
             <span class="option-letter">F</span>
-            <span class="option-text">Uma transição de carreira ou uma renda extra (part-time)</span>
+            <span class="option-text" data-i18n="optF">Uma transição de carreira ou uma renda extra (part-time)</span>
           </label>
 
           <label class="option">
             <input type="radio" name="interesse" value="G" required>
             <span class="option-letter">G</span>
-            <span class="option-text">Outro Tema</span>
+            <span class="option-text" data-i18n="optG">Outro Tema</span>
           </label>
         </div>
       </div>
 
       <button class="btn-primary" id="btn-continuar" disabled>
-        Continuar
+        <span data-i18n="continue">Continuar</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M5 12h14M13 5l7 7-7 7"/>
         </svg>
@@ -619,46 +756,46 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
-        Voltar
+        <span data-i18n="back">Voltar</span>
       </button>
 
-      <h1 class="step-title">Seus dados</h1>
+      <h1 class="step-title" data-i18n="step2Title">Seus dados</h1>
 
       <div class="input-group">
         <label class="input-label" for="nome">
-          Nome completo
+          <span data-i18n="nomeLabel">Nome completo</span>
           <span class="required">*</span>
         </label>
-        <input type="text" class="input-field" id="nome" name="nome" placeholder="Digite seu nome completo..." required>
+        <input type="text" class="input-field" id="nome" name="nome" placeholder="Digite seu nome completo..." data-i18n-ph="nomePh" required>
       </div>
 
       <div class="input-group">
         <label class="input-label" for="email">
-          E-mail
+          <span data-i18n="emailLabel">E-mail</span>
           <span class="required">*</span>
         </label>
-        <input type="email" class="input-field" id="email" name="email" placeholder="Digite seu e-mail..." required>
+        <input type="email" class="input-field" id="email" name="email" placeholder="Digite seu e-mail..." data-i18n-ph="emailPh" required>
       </div>
 
       <div class="input-group">
         <label class="input-label" for="whatsapp">
-          WhatsApp
+          <span data-i18n="whatsappLabel">WhatsApp</span>
           <span class="required">*</span>
         </label>
         <input type="tel" class="input-field" id="whatsapp" name="whatsapp" placeholder="+1 (___) ___-____" required>
-        <div class="input-hint">Ao clicar em Enviar, você consente em receber comunicações via WhatsApp.</div>
+        <div class="input-hint" data-i18n="whatsappHint">Ao clicar em Enviar, você consente em receber comunicações via WhatsApp.</div>
       </div>
 
       <div class="input-group">
         <label class="input-label" for="origem">
-          Em qual lugar você viu esse QR code?
+          <span data-i18n="origemLabel">Em qual lugar você viu esse QR code?</span>
           <span class="required">*</span>
         </label>
-        <input type="text" class="input-field" id="origem" name="origem" placeholder="Ex: evento, restaurante, rede social..." required>
+        <input type="text" class="input-field" id="origem" name="origem" placeholder="Ex: evento, restaurante, rede social..." data-i18n-ph="origemPh" required>
       </div>
 
       <button class="btn-primary" id="btn-enviar">
-        Enviar
+        <span data-i18n="send">Enviar</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M5 12h14M13 5l7 7-7 7"/>
         </svg>
@@ -673,24 +810,120 @@
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
-        <h2 class="success-title">Obrigado, <em>conexão feita</em>.</h2>
-        <p class="success-text">Seus dados foram recebidos. Em breve nossa equipe entrará em contato via WhatsApp.</p>
+        <h2 class="success-title" data-i18n-html="successTitle">Obrigado, <em>conexão feita</em>.</h2>
+        <p class="success-text" data-i18n="successText">Seus dados foram recebidos. Em breve nossa equipe entrará em contato via WhatsApp.</p>
       </div>
     </div>
 
   </div>
 </main>
 
-<footer>
+<footer data-i18n="footer">
   Up Finance · 2026 · Todos os direitos reservados
 </footer>
 
 <script>
   // === Config ===
-  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwkp8HNZYKJbKPxh9EWZwupftVlTKKZ0GToRvEkhTjQHGYC7DRxfm21iUz9FUk9qNjP/exec';
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbw3vr8OJ8PDItYkZn19Jv8o8eCTTq8wJRO7CKwHGB5hnhRB8VbpC_2BxVjJIMbfz9To/exec';
+
+  // === Translations ===
+  const translations = {
+    pt: {
+      tagline: 'Construindo Riqueza · Elevando a Vida',
+      step1Title: 'Responda para ganhar',
+      q1Label: 'Você está interessado em:',
+      optA: 'Participar de um seminário gratuito sobre finanças',
+      optB: 'Saber mais sobre como ter uma aposentadoria livre de impostos',
+      optC: 'Como posso planejar os custos de faculdade para os meus filhos',
+      optD: 'Saber mais sobre proteção hipotecária',
+      optE: 'Saber mais sobre os Benefícios em Vida',
+      optF: 'Uma transição de carreira ou uma renda extra (part-time)',
+      optG: 'Outro Tema',
+      continue: 'Continuar',
+      back: 'Voltar',
+      step2Title: 'Seus dados',
+      nomeLabel: 'Nome completo',
+      nomePh: 'Digite seu nome completo...',
+      emailLabel: 'E-mail',
+      emailPh: 'Digite seu e-mail...',
+      whatsappLabel: 'WhatsApp',
+      whatsappHint: 'Ao clicar em Enviar, você consente em receber comunicações via WhatsApp.',
+      origemLabel: 'Em qual lugar você viu esse QR code?',
+      origemPh: 'Ex: evento, restaurante, rede social...',
+      send: 'Enviar',
+      sending: 'Enviando...',
+      successTitle: 'Obrigado, <em>conexão feita</em>.',
+      successText: 'Seus dados foram recebidos. Em breve nossa equipe entrará em contato via WhatsApp.',
+      footer: 'Up Finance · 2026 · Todos os direitos reservados'
+    },
+    en: {
+      tagline: 'Building Wealth · Elevating Life',
+      step1Title: 'Answer to win',
+      q1Label: 'You are interested in:',
+      optA: 'Attending a free seminar about finances',
+      optB: 'Learning more about having a tax-free retirement',
+      optC: 'How I can plan college costs for my children',
+      optD: 'Learning more about mortgage protection',
+      optE: 'Learning more about Living Benefits',
+      optF: 'A career transition or extra income (part-time)',
+      optG: 'Other Topic',
+      continue: 'Continue',
+      back: 'Back',
+      step2Title: 'Your information',
+      nomeLabel: 'Full name',
+      nomePh: 'Enter your full name...',
+      emailLabel: 'Email',
+      emailPh: 'Enter your email...',
+      whatsappLabel: 'WhatsApp',
+      whatsappHint: 'By clicking Send, you consent to receive communications via WhatsApp.',
+      origemLabel: 'Where did you see this QR code?',
+      origemPh: 'E.g.: event, restaurant, social media...',
+      send: 'Send',
+      sending: 'Sending...',
+      successTitle: 'Thank you, <em>connection made</em>.',
+      successText: 'Your information has been received. Our team will contact you via WhatsApp soon.',
+      footer: 'Up Finance · 2026 · All rights reserved'
+    }
+  };
+
+  let currentLang = 'pt';
+
+  function applyLang(lang) {
+    currentLang = lang;
+    const dict = translations[lang];
+    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      const key = el.getAttribute('data-i18n-ph');
+      if (dict[key] !== undefined) el.placeholder = dict[key];
+    });
+  }
+
+  // === Language selection ===
+  const langScreen = document.getElementById('lang-screen');
+  const formWrap = document.getElementById('form-wrap');
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      applyLang(btn.getAttribute('data-lang'));
+      formData.idioma = currentLang === 'pt' ? 'Português' : 'English';
+      langScreen.classList.add('hidden');
+      formWrap.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
 
   // === State ===
   const formData = {
+    idioma: '',
     interesse: null,
     nome: '',
     email: '',
@@ -746,6 +979,10 @@
   // === WhatsApp mask ===
   inputs.whatsapp.addEventListener('input', (e) => {
     let v = e.target.value.replace(/\D/g, '');
+    // Remove o "1" do código do país (+1), senão ele é recontado a cada
+    // tecla e fica impossível apagar. DDD dos EUA nunca começa com 1.
+    if (v.startsWith('1')) v = v.slice(1);
+    v = v.slice(0, 10); // máximo 10 dígitos do número nacional
     if (v.length === 0) { e.target.value = ''; return; }
     if (v.length <= 3) {
       e.target.value = `+1 (${v}`;
@@ -784,7 +1021,7 @@
 
     // Loading state
     btnEnviar.disabled = true;
-    btnEnviar.innerHTML = 'Enviando... <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
+    btnEnviar.innerHTML = translations[currentLang].sending + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16" style="animation:spin 1s linear infinite"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>';
 
     const showSuccess = () => {
       step2.classList.remove('active');
